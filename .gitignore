@@ -1,0 +1,30 @@
+# Secrets -- NEVER commit
+.env
+.env.local
+.env.production
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Test / eval artifacts
+.pytest_cache/
+eval_report.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# uv
+uv.lock

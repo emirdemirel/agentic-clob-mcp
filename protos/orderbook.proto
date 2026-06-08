@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+package orderbook;
+
+service OrderBookService {
+    rpc PlaceOrder(PlaceOrderRequest) returns (PlaceOrderResponse);
+    rpc CancelOrder(CancelOrderRequest) returns (CancelOrderResponse);
+    rpc GetOrderBook(GetOrderBookRequest) returns (OrderBookSnapshot);
+    rpc GetOrder(GetOrderRequest) returns (OrderResponse);
+    rpc GetTradeHistory(GetTradeHistoryRequest) returns (TradeHistoryResponse);
+}
+
+enum Side {
+    BUY = 0;
+    SELL = 1;
+}
+
+enum OrderStatus {
+    OPEN = 0;
+    PARTIALLY_FILLED = 1;
+    FILLED = 2;
+    CANCELLED = 3;
+}
+
+message PlaceOrderRequest {
+    string client_order_id = 1;
+    Side side = 2;
+    string price = 3;
+    string quantity = 4;
+}
+
+message PlaceOrderResponse {
+    string order_id = 1;
+    OrderStatus status = 2;
+    string remaining_quantity = 3;
+    repeated Trade fills = 4;
+}
+
+message Trade {
+    string trade_id = 1;
+    string price = 2;
+    string quantity = 3;
+    string maker_order_id = 4;
+    string taker_order_id = 5;
+    int64 timestamp_ns = 6;
+}
+
+message CancelOrderRequest {
+    string order_id = 1;
+}
+
+message CancelOrderResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+message GetOrderBookRequest {
+    int32 depth = 1;
+}
+
+message PriceLevel {
+    string price = 1;
+    string total_quantity = 2;
+    int32 order_count = 3;
+}
+
+message OrderBookSnapshot {
+    string pair = 1;
+    repeated PriceLevel bids = 2;
+    repeated PriceLevel asks = 3;
+    string best_bid = 4;
+    string best_ask = 5;
+    string spread = 6;
+    int64 timestamp_ns = 7;
+}
+
+message GetOrderRequest {
+    string order_id = 1;
+}
+
+message OrderResponse {
+    string order_id = 1;
+    string client_order_id = 2;
+    Side side = 3;
+    string price = 4;
+    string original_quantity = 5;
+    string remaining_quantity = 6;
+    string filled_quantity = 7;
+    OrderStatus status = 8;
+    int64 created_at_ns = 9;
+}
+
+message GetTradeHistoryRequest {
+    int32 limit = 1;
+}
+
+message TradeHistoryResponse {
+    repeated Trade trades = 1;
+}
